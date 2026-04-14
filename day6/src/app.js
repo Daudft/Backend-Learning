@@ -18,4 +18,14 @@ app.post("/notes",async (req,res)=>{
   })
 })
 
+
+app.get("/notes", async(req,res)=>{
+   const notes = await model.find()
+
+   res.status(201).json({
+    message: "Notes fetched Succsessfully",
+    notes
+   })
+})
+
 module.exports = app;
