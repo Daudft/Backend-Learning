@@ -1,0 +1,48 @@
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  color: black;
+}
+html,body,#root{
+  height: 100%;
+  width: 100%;
+}
+body{
+  background-color: black;
+}
+.notes{
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+ 
+}
+
+.note{
+  padding: 10px;
+  background-color: rgb(219, 3, 147);
+  width: 200px;
+  margin: 10px;
+  border-radius: 5px;
+  text-align: center;
+}
+form{
+  height: 100px;
+
+}
+input{
+  padding: 10px;
+  width: 200px;
+  margin: 10px;
+  border-radius: 5px;
+  border: none;
+}
+button{
+  padding: 10px;
+  width: 100px;
+  margin: 10px;
+  border-radius: 5px;
+  border: none;
+  background-color: green;
+  color: white;
+}
