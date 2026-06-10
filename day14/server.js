@@ -2,7 +2,9 @@ const app = require("./src/app")
 const express = require("express")
 const connectDB = require("./config/db")
 const noteModel = require("./model/note.model")
+const cors = require("cors")
 app.use(express.json())
+app.use(cors())
 
 
 
