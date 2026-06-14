@@ -1,33 +1,88 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React, { useState } from 'react'
+import axios from "axios"
+import { useEffect } from 'react'
 
-function App() {
-  const [count, setCount] = useState(0)
+const App = () => {
+
+  const [note, setNotes] = useState([])
+  const [editingId, setEditingId] = useState(null)
+  const [newDescription, setNewDescription] = useState("")
+
+  function fetchData(){
+    axios.get("http://localhost:3000/api/notes")
+    .then((res)=>{
+      setNotes(res.data.note)
+    })
+  }
+
+  useEffect(()=>{
+    fetchData()
+  },[])
+
+  function handleSubmit(e){
+    e.preventDefault()
+    const {title,description} = e.target.elements
+    axios.post("http://localhost:3000/api/notes",{
+      title:title.value,
+      description:description.value
+    })
+    .then((res)=>{
+      fetchData()
+      e.target.reset()
+    })
+  }
+
+  function deleteNote(noteId){
+    axios.delete("http://localhost:3000/api/notes/"+noteId)
+    .then((res)=>{
+      fetchData()
+    })
+  }
+
+  function updateNote(noteId){
+    axios.patch("http://localhost:3000/api/notes/"+noteId,{
+      description:newDescription
+    })
+    .then((res)=>{
+      fetchData()
+      setEditingId(null)
+      setNewDescription("")
+    })
+  }
 
   return (
     <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <form onSubmit={handleSubmit}>
+      <input name='title' type="text" placeholder='enter title' />
+      <input name='description' type="text" placeholder='enter description' />
+      <button>Create</button>
+    </form> 
+
+    <div className="notes">
+    {note.map((note)=>{
+     return <div className="note" key={note._id}>
+        <h2>{note.title}</h2>
+
+        {editingId === note._id ? (
+          <>
+            <input value={newDescription} onChange={(e)=>setNewDescription(e.target.value)} />
+            <button onClick={()=>updateNote(note._id)}>Save</button>
+            <button onClick={()=>setEditingId(null)}>Cancel</button>
+          </>
+        ):(
+          <>
+            <h4>{note.description}</h4>
+            <button id='delete' onClick={()=>{
+              setEditingId(note._id)
+              setNewDescription(note.description)
+            }}>Edit</button>
+          </>
+        )}
+
+        <button onClick={()=>{deleteNote(note._id)}} id='delete'>delete</button>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+    })} 
+    </div>     
     </>
   )
 }
