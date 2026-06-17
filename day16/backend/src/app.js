@@ -2,16 +2,18 @@ require("dotenv").config()
 const express = require("express")
 const noteModel = require("../model/note.model")
 const app = express()
+const cors = require("cors")
+app.use(cors())
 
 app.use(express.json())
 
 
 //post api
 
-app.post("/api/notes",(req,res)=>{
+app.post("/api/notes",async(req,res)=>{
     const {title,description} = req.body
 
-    const note =  noteModel.create({
+    const note = await noteModel.create({
         title,
         description
     })

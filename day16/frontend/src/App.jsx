@@ -1,33 +1,70 @@
+import React, { useEffect } from 'react'
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import axios from "axios"
 
-function App() {
-  const [count, setCount] = useState(0)
+const App = () => {
+
+
+  const [notes, setNotes] = useState([])
+  function fetchData(){
+axios.get("http://localhost:3000/api/notes")
+  .then((res)=>{
+    setNotes(res.data.notes)
+  })
+  }
+
+  useEffect(()=>{
+    fetchData()
+  },[])
+
+
+  //handle input
+
+  function handleInput(e){
+    e.preventDefault()
+
+    const {title,description} = e.target.elements
+
+    axios.post("http://localhost:3000/api/notes",{
+      title:title.value,
+      description:description.value
+    }).then((res)=>{
+      fetchData()
+      e.target.reset()
+    })
+  }
+
+  //delete note
+
+  function handleDelete(noteId){
+    
+  }
+
+
+
+  
+
+  
+
 
   return (
     <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+
+    <form onSubmit={handleInput} >
+      <input name='title' type="text" placeholder='enter title' />
+      <input name="description" type="text" placeholder='enter description' />
+      <button className='create'>Create</button>
+    </form>
+    <div className="notes">
+      {notes.map((note)=>{
+      return  <div className="note">
+        <h2>{note.title}</h2>
+        <h3>{note.description}</h3>
+        <button id='delete'>Delete</button>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      })}
+    </div>
+      
     </>
   )
 }
