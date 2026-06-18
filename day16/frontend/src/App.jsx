@@ -37,14 +37,14 @@ axios.get("http://localhost:3000/api/notes")
   //delete note
 
   function handleDelete(noteId){
+    // console.log(noteId)
+
+    axios.delete("http://localhost:3000/api/notes/"+noteId)
+    .then((res)=>{
+      fetchData()
+    })
     
   }
-
-
-
-  
-
-  
 
 
   return (
@@ -60,7 +60,7 @@ axios.get("http://localhost:3000/api/notes")
       return  <div className="note">
         <h2>{note.title}</h2>
         <h3>{note.description}</h3>
-        <button id='delete'>Delete</button>
+        <button onClick={()=>{handleDelete(note._id)}} id='delete'>Delete</button>
       </div>
       })}
     </div>

@@ -3,7 +3,11 @@ const express = require("express")
 const noteModel = require("../model/note.model")
 const app = express()
 const cors = require("cors")
+const path = require("path")
+
+app.use(express.static("public"))
 app.use(cors())
+
 
 app.use(express.json())
 
@@ -57,6 +61,13 @@ app.patch("/api/notes/:id",async(req,res)=>{
     res.status(201).json({
         message:"note updated successfully"
     })
+})
+
+
+//wildcard
+
+app.use("*name",(req,res)=>{
+    res.sendFile(path.join(__dirname,"..","./public/index.html"))
 })
 
 
